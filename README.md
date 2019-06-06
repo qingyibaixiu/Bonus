@@ -82,7 +82,7 @@ fflush(pipe); //flush pipe
 fprintf(pipe,"exit \n");   // exit gnuplot
 pclose(pipe);    //close pipe
 }
-
+```
 最后输出的图像如下：
 ![screenshots](./img/Result.png)
 
