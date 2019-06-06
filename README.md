@@ -65,25 +65,45 @@ printf ("\n");
 最后使用pipe连接Gnuplot输出图像，代码如下：
 ```C
 //plot
-FILE *pipe = popen("gnuplot -persist", "w");  // Open a pipe to gnuplot
-
-if (pipe) 
-{   
-// If gnuplot is found
-fprintf(pipe, "d(x) = k1+k2*x\n");
-fprintf(pipe, "set datafile separator ','\n"); //datafile separator ','
-fprintf(pipe, "fit d(x) './data/springdata.csv' using ($2*9.81):1 via k1,k2\n");
-fprintf(pipe, "set term wx\n");         // set the terminal               
+FILE *pipe = popen("gnuplot -persist", "w"); // Open a pipe to gnuplot
+if (pipe) // If gnuplot is found
+{ 
+fprintf(pipe, "set term wx\n");         // set the terminal
 fprintf(pipe, "set xlabel '|Force| (Newtons)'\n");
 fprintf(pipe, "set ylabel 'Distance (meters)'\n");
-fprintf(pipe, "set title 'Measured Displacement of Spring'\n");
-fprintf(pipe, "plot './data/springdata.csv' using  ($2*9.81):1 title '(Force,Distance)',\
-'./data/springdata.csv' using ($2*9.81):(d($2*9.81)) title '',\
-'./data/springdata.csv' using ($2*9.81):(d($2*9.81))  title 'Force=f(Distance)' with line ls 12\n");
-
-fflush(pipe); //flush pipe
-fprintf(pipe,"exit \n");   // exit gnuplot
-pclose(pipe);    //close pipe
+fprintf(pipe, "set xrange [0:10]\n");
+fprintf(pipe, "set yrange [0:0.6]\n");
+fprintf(pipe, "set title '<X,Y> and Linear fit:y=%.4f*x+%.4f'\n",c1,c0);
+      
+/* In this case, the datafile is written directly to the gnuplot pipe with no need for a temporary file.
+           The special filename '-' specifies that the data are inline; i.e., they follow the command.
+        1 sending gnuplot the plot '-' command 
+        2 followed by data points 
+        3 followed by the letter "e" 
+     */
+    
+// 1 sending gnuplot the plot '-' command
+fprintf(pipe, "plot '-' title '<x,y>' with points  pt 7 lc rgb 'blue',\
+        '-' title 'Line' with  linespoints  pt  6 lc rgb 'red'\n");
+     
+// 2 followed by data points: <x,y>
+for (int i = 0; i < n; i++)
+{
+fprintf(pipe, "%lf %lf\n", x[i], y[i]);
+}
+// 3 followed by the letter "e" 
+fprintf(pipe,"\n"); // start a new draw item
+fprintf(pipe, "%lf %lf\n", 0.0, c0+c1*0,0);
+for (int i = 0; i < n; i++)
+{
+fprintf(pipe, "%lf %lf\n", x[i], c0+c1*x[i]);
+}
+fprintf(pipe, "%lf %lf\n", 10.0,c0+c1*10,0);
+fprintf(pipe, "e");
+      
+fflush(pipe);
+fprintf(pipe, "exit \n"); // exit gnuplot
+pclose(pipe);             //close pipe
 }
 ```
 
