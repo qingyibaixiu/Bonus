@@ -1,7 +1,10 @@
 这次作业的要求分成两个部分：
+
 第一部分是先读取springdata.csv数据文件，在此基础上使用GSL进行线性回归，然后使用Gnuplot来可视化线性回归的结果。第二部分是使用Git,Github进行
 版本控制，将你的作业上传到你的Github上并且可以进行不断的更新。
+
 所以我会从这两个部分来介绍我这次的作业：
+
 一、
 首先编写程序来读取.csv文件，代码如下所示:
 ```c
@@ -83,12 +86,15 @@ fprintf(pipe,"exit \n");   // exit gnuplot
 pclose(pipe);    //close pipe
 }
 ```
+
 最后输出的图像如下：
 ![screenshots](./img/Result.png)
 
 二、
 将作业上传到我个人的Github仓库，以便进行不断的更新。最终的网址和截图如下：
+
 网址：
 https://github.com/qingyibaixiu/Bonus
+
 截图：
 ![screenshots](./img/Github_repository.png)
