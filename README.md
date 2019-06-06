@@ -106,8 +106,19 @@ fprintf(pipe, "exit \n"); // exit gnuplot
 pclose(pipe);             //close pipe
 }
 ```
+最后编写makefile文件运行程序，代码如下(在Linus下运行)：
 
-最后输出的图像如下：
+```makefile
+all: fitlinear_plot
+
+fitlinear_plot: obj  
+	gcc -o ./fitlinear_plot.exe ./fitlinear_plot.o  -lgsl -lgslcblas -lm
+	rm -f  ./fitlinear_plot.o
+obj:  
+	gcc -c  -o ./fitlinear_plot.o ./src/fitlinear_plot.c -lgsl -lgslcblas -lm
+```
+
+输出的结果图像如下：
 
 ![screenshots](./img/Result.png)
 
