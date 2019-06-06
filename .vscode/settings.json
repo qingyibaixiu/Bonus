@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gsl_fit.h": "c",
+        "stdio.h": "c"
+    }
+}
